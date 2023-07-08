@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Point</title>
+</head>
+<body>
+  <div>
+    <label for="latitude">Latitude:</label>
+    <input type="text" id="latitude">
+    <label for="longitude">Longitude:</label>
+    <input type="text" id="longitude">
+    <button id="addLocation">Add Location</button>
+  </div>
+  <button id="calculateMeetingPoint">Calculate Meeting Point</button>
+  <pre id="result"></pre>
+
+  <script>
+    var polygonVertices = [];
+
+    document.querySelector("#addLocation").addEventListener("click", () => {
+      const latitudeInput = document.querySelector("#latitude");
+      const longitudeInput = document.querySelector("#longitude");
+      
+      const latitude = parseFloat(latitudeInput.value);
+      const longitude = parseFloat(longitudeInput.value);
+
+      if (isNaN(latitude) || isNaN(longitude)) {
+        alert("Please enter valid coordinates");
+        return;
+      }
+
+      polygonVertices.push([latitude, longitude]);
+
+      latitudeInput.value = "";
+      longitudeInput.value = "";
+
+      console.log("Current Polygon Vertices:", polygonVertices);
+    });
+
+    document.querySelector("#calculateMeetingPoint").addEventListener("click", () => {
+      if (polygonVertices.length < 3) {
+        alert("Please add at least three locations");
+        return;
+      }
+
+      const center = findPolygonCenter(polygonVertices);
+      document.querySelector("#result").textContent = "Meeting Point: " + center.join(", ");
+    });
+
+    function findPolygonCenter(vertices) {
+      var numVertices = vertices.length;
+      var sumX = 0.0;
+      var sumY = 0.0;
+
+      for (var i = 0; i < numVertices; i++) {
+        sumX += vertices[i][0];
+        sumY += vertices[i][1];
+      }
+
+      var avgX = sumX / numVertices;
+      var avgY = sumY / numVertices;
+
+      var center = [avgX, avgY];
+      return center;
+    }
+  </script>
+</body>
+</html>
